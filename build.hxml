@@ -1,0 +1,6 @@
+-cp lib
+-cp src
+-lib hxnodejs
+-main Go
+-js agentscreen.js
+-D js-es6
