@@ -2,18 +2,36 @@
 if (process.version < "v4.0.0") console.warn("Module " + (typeof(module) == "undefined" ? "" : module.filename) + " requires node.js version 4.0.0 or higher");
 (function () { "use strict";
 var $hxEnums = {};
-var AgentScreen = require("agentscreen").AgentScreen;
+function $extend(from, fields) {
+	function Inherit() {} Inherit.prototype = from; var proto = new Inherit();
+	for (var name in fields) proto[name] = fields[name];
+	if( fields.toString !== Object.prototype.toString ) proto.toString = fields.toString;
+	return proto;
+}
+var AgentScreen = require("./agentscreen").AgentScreen;
 var Go = function() { };
+Go.__name__ = true;
 Go.main = function() {
 	new Server();
 };
+var HxOverrides = function() { };
+HxOverrides.__name__ = true;
+HxOverrides.cca = function(s,index) {
+	var x = s.charCodeAt(index);
+	if(x != x) {
+		return undefined;
+	}
+	return x;
+};
+Math.__name__ = true;
 var Server = function() {
 	var _gthis = this;
+	var port = Std.parseInt(process.env["PORT"]);
 	js_node_Http.createServer(function(req,res) {
 		var q = req.url.split("/");
 		q.shift();
 		_gthis.action = q.shift();
-		console.log("src/Server.hx:22:","action:" + _gthis.action);
+		console.log("src/Server.hx:26:","action:" + _gthis.action);
 		var _g = _gthis.action;
 		switch(_g) {
 		case "logout":
@@ -39,19 +57,47 @@ var Server = function() {
 				}
 			}
 			_gthis.param = _g1;
-			_gthis.agentScreen = new AgentScreen("https://xpress.mein-dialer.com/agc/vicidial.fly-xpress.php?relogin=YES&VD_login=6666&VD_campaign=QCKINDER&phone_login=666&phone_pass=666ohne&VD_pass=dial4NICHTS");
+			var _this = _gthis.param;
+			var tmp = "https://xpress.mein-dialer.com/agc/vicidial.fly-xpress.php?relogin=YES&VD_login=" + Std.string(__map_reserved["VD_login"] != null ? _this.getReserved("VD_login") : _this.h["VD_login"]) + "&VD_campaign=";
+			var _this1 = _gthis.param;
+			var tmp1 = tmp + Std.string(__map_reserved["VD_campaign"] != null ? _this1.getReserved("VD_campaign") : _this1.h["VD_campaign"]) + "&phone_login=";
+			var _this2 = _gthis.param;
+			var tmp2 = tmp1 + Std.string(__map_reserved["phone_login"] != null ? _this2.getReserved("phone_login") : _this2.h["phone_login"]) + "&phone_pass=";
+			var _this3 = _gthis.param;
+			var tmp3 = tmp2 + Std.string(__map_reserved["phone_pass"] != null ? _this3.getReserved("phone_pass") : _this3.h["phone_pass"]) + "&VD_pass=";
+			var _this4 = _gthis.param;
+			var tmp4 = __map_reserved["VD_pass"] != null ? _this4.getReserved("VD_pass") : _this4.h["VD_pass"];
+			_gthis.agentScreen = new AgentScreen(tmp3 + Std.string(tmp4));
 			_gthis.agentScreen.run();
 			res.writeHead(200,{ "Content-Type" : "text/plain"});
 			res.end("Hello World\n");
 			break;
 		}
-	}).listen(1337,"127.0.0.1");
+	}).listen({ port : port, host : "127.0.0.1"});
 	console.log("Server running at 1337");
 };
+Server.__name__ = true;
+var Std = function() { };
+Std.__name__ = true;
+Std.string = function(s) {
+	return js_Boot.__string_rec(s,"");
+};
+Std.parseInt = function(x) {
+	var v = parseInt(x,10);
+	if(v == 0 && (HxOverrides.cca(x,1) == 120 || HxOverrides.cca(x,1) == 88)) {
+		v = parseInt(x);
+	}
+	if(isNaN(v)) {
+		return null;
+	}
+	return v;
+};
 var haxe_IMap = function() { };
+haxe_IMap.__name__ = true;
 var haxe_ds_StringMap = function() {
 	this.h = { };
 };
+haxe_ds_StringMap.__name__ = true;
 haxe_ds_StringMap.__interfaces__ = [haxe_IMap];
 haxe_ds_StringMap.prototype = {
 	setReserved: function(key,value) {
@@ -59,6 +105,13 @@ haxe_ds_StringMap.prototype = {
 			this.rh = { };
 		}
 		this.rh["$" + key] = value;
+	}
+	,getReserved: function(key) {
+		if(this.rh == null) {
+			return null;
+		} else {
+			return this.rh["$" + key];
+		}
 	}
 };
 var haxe_io_Bytes = function(data) {
@@ -68,7 +121,120 @@ var haxe_io_Bytes = function(data) {
 	data.hxBytes = this;
 	data.bytes = this.b;
 };
+haxe_io_Bytes.__name__ = true;
+var js__$Boot_HaxeError = function(val) {
+	Error.call(this);
+	this.val = val;
+	if(Error.captureStackTrace) {
+		Error.captureStackTrace(this,js__$Boot_HaxeError);
+	}
+};
+js__$Boot_HaxeError.__name__ = true;
+js__$Boot_HaxeError.wrap = function(val) {
+	if((val instanceof Error)) {
+		return val;
+	} else {
+		return new js__$Boot_HaxeError(val);
+	}
+};
+js__$Boot_HaxeError.__super__ = Error;
+js__$Boot_HaxeError.prototype = $extend(Error.prototype,{
+});
+var js_Boot = function() { };
+js_Boot.__name__ = true;
+js_Boot.__string_rec = function(o,s) {
+	if(o == null) {
+		return "null";
+	}
+	if(s.length >= 5) {
+		return "<...>";
+	}
+	var t = typeof(o);
+	if(t == "function" && (o.__name__ || o.__ename__)) {
+		t = "object";
+	}
+	switch(t) {
+	case "function":
+		return "<function>";
+	case "object":
+		if(o.__enum__) {
+			var e = $hxEnums[o.__enum__];
+			var n = e.__constructs__[o._hx_index];
+			var con = e[n];
+			if(con.__params__) {
+				s += "\t";
+				var tmp = n + "(";
+				var _g = [];
+				var _g1 = 0;
+				var _g2 = con.__params__;
+				while(_g1 < _g2.length) {
+					var p = _g2[_g1];
+					++_g1;
+					_g.push(js_Boot.__string_rec(o[p],s));
+				}
+				return tmp + _g.join(",") + ")";
+			} else {
+				return n;
+			}
+		}
+		if((o instanceof Array)) {
+			var l = o.length;
+			var i;
+			var str = "[";
+			s += "\t";
+			var _g11 = 0;
+			var _g3 = l;
+			while(_g11 < _g3) {
+				var i1 = _g11++;
+				str += (i1 > 0 ? "," : "") + js_Boot.__string_rec(o[i1],s);
+			}
+			str += "]";
+			return str;
+		}
+		var tostr;
+		try {
+			tostr = o.toString;
+		} catch( e1 ) {
+			var e2 = (e1 instanceof js__$Boot_HaxeError) ? e1.val : e1;
+			return "???";
+		}
+		if(tostr != null && tostr != Object.toString && typeof(tostr) == "function") {
+			var s2 = o.toString();
+			if(s2 != "[object Object]") {
+				return s2;
+			}
+		}
+		var k = null;
+		var str1 = "{\n";
+		s += "\t";
+		var hasp = o.hasOwnProperty != null;
+		for( var k in o ) {
+		if(hasp && !o.hasOwnProperty(k)) {
+			continue;
+		}
+		if(k == "prototype" || k == "__class__" || k == "__super__" || k == "__interfaces__" || k == "__properties__") {
+			continue;
+		}
+		if(str1.length != 2) {
+			str1 += ", \n";
+		}
+		str1 += s + k + " : " + js_Boot.__string_rec(o[k],s);
+		}
+		s = s.substring(1);
+		str1 += "\n" + s + "}";
+		return str1;
+	case "string":
+		return o;
+	default:
+		return String(o);
+	}
+};
 var js_node_Http = require("http");
+String.__name__ = true;
+Array.__name__ = true;
 var __map_reserved = {};
+Object.defineProperty(js__$Boot_HaxeError.prototype,"message",{ get : function() {
+	return String(this.val);
+}});
 Go.main();
 })();

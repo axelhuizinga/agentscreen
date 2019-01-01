@@ -2,6 +2,9 @@ import js.node.http.IncomingMessage;
 import AgentScreen;
 import js.node.Http;
 import js.Node.console;
+import js.Node;
+import js.node.net.Server.ServerListenOptionsTcp;
+
 
 class Server
 {
@@ -12,6 +15,7 @@ class Server
 
     public function new()
     {
+        var port:Int = Std.parseInt( Node.process.env['PORT']);
         Http.createServer(function(req:js.node.http.IncomingMessage, res:js.node.http.ServerResponse)
         {
             //console.log(req.url);
@@ -44,7 +48,8 @@ class Server
                     res.writeHead(200, {'Content-Type':'text/plain'});
                     res.end('Goodbye\n');
             }           
-        }).listen(process.env.PORT, '127.0.0.1');
+        }).listen({port:port, host:'127.0.0.1'});
+        //}).listen(Node.process.env.PORT, '127.0.0.1');
         console.log('Server running at 1337');
     }
 }
