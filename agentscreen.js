@@ -73,7 +73,7 @@ var Server = function() {
 			res.end("Hello World\n");
 			break;
 		}
-	}).listen({ port : port, host : "127.0.0.1"});
+	}).listen(port);
 	console.log("Server running at 1337");
 };
 Server.__name__ = true;

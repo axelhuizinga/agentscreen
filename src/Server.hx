@@ -48,7 +48,7 @@ class Server
                     res.writeHead(200, {'Content-Type':'text/plain'});
                     res.end('Goodbye\n');
             }           
-        }).listen({port:port, host:'127.0.0.1'});
+        }).listen(port);
         //}).listen(Node.process.env.PORT, '127.0.0.1');
         console.log('Server running at 1337');
     }
