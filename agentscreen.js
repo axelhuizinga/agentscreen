@@ -74,7 +74,7 @@ var Server = function() {
 			break;
 		}
 	}).listen(port);
-	console.log("Server running at 1337");
+	console.log("Server running at " + port);
 };
 Server.__name__ = true;
 var Std = function() { };

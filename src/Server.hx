@@ -50,7 +50,7 @@ class Server
             }           
         }).listen(port);
         //}).listen(Node.process.env.PORT, '127.0.0.1');
-        console.log('Server running at 1337');
+        console.log('Server running at $port');
     }
 }
 /* var ag:AgentScreen = new AgentScreen();
